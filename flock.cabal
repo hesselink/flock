@@ -11,7 +11,7 @@ Description:
     Simple wrapper around flock(2).
 Category:           System
 Tested-With:        GHC==6.6
-Build-Depends:      base, unix, mtl
+Build-Depends:      base > 3 && < 5, unix >= 2.3 && < 2.5, mtl == 1.1.*
 Extensions:         ForeignFunctionInterface
 Extra-source-files: "BSD3", "GPL-2"
 Exposed-modules:
