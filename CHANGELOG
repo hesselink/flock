@@ -1,0 +1,15 @@
+0.2.3:
+  * Add Erik Hesselink as maintainer.
+  * Add CHANGELOG.
+
+0.2.2:
+  * Export the Lock type.
+
+0.2.1:
+  * Lock call no longer blocks other Haskell threads.
+
+0.2:
+  * Fixed build failure on GHC 6.12.
+  * Added bounds on dependencies.
+
+0.1: Initial release.
