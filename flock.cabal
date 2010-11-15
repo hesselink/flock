@@ -4,7 +4,7 @@ License:            OtherLicense
 License-File:       COPYING
 Copyright:          Ian Lynagh, 2007
 Author:             Ian Lynagh
-Maintainer:         igloo@earth.li
+Maintainer:         Erik Hesselink <hesselink@gmail.com>
 Stability:          experimental
 Synopsis:           Wrapper for flock(2)
 Description:
