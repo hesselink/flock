@@ -14,7 +14,7 @@ Homepage:           http://github.com/hesselink/flock
 Build-Type:         Simple
 Tested-With:        GHC==6.10.3, GHC==6.12.3
 Cabal-Version:      >= 1.6
-Extra-source-files: "BSD3", "GPL-2"
+Extra-source-files: "BSD3", "GPL-2", "CHANGELOG"
 
 Source-repository head
   Type:             github
