@@ -16,5 +16,5 @@ Extensions:         ForeignFunctionInterface
 Extra-source-files: "BSD3", "GPL-2"
 Exposed-modules:
     System.Lock.FLock
-GHC-Options: -Wall -Werror
+GHC-Options: -Wall
 
