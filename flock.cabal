@@ -1,0 +1,20 @@
+Name:               flock
+Version:            0.1
+License:            OtherLicense
+License-File:       COPYING
+Copyright:          Ian Lynagh, 2007
+Author:             Ian Lynagh
+Maintainer:         igloo@earth.li
+Stability:          experimental
+Synopsis:           Wrapper for flock(2)
+Description:
+    Simple wrapper around flock(2).
+Category:           System
+Tested-With:        GHC==6.6
+Build-Depends:      base, unix, mtl
+Extensions:         ForeignFunctionInterface
+Extra-source-files: "BSD3", "GPL-2"
+Exposed-modules:
+    System.Lock.FLock
+GHC-Options: -Wall -Werror
+
