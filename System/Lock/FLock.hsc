@@ -19,7 +19,7 @@ c_LOCK_EX = #const LOCK_EX
 c_LOCK_UN = #const LOCK_UN
 c_LOCK_NB = #const LOCK_NB
 
-foreign import ccall unsafe "sys/file.h flock" flock :: CInt -> CInt -> IO CInt
+foreign import ccall safe "sys/file.h flock" flock :: CInt -> CInt -> IO CInt
 
 data SharedExclusive = Shared | Exclusive
 
