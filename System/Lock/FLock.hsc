@@ -48,6 +48,6 @@ lock fp se b = liftIO
                     NoBlock -> op .|. c_LOCK_NB
 
 unlock :: MonadIO m => Lock -> m ()
-unlock (Lock fd) = liftIO $ do flock fd c_LOCK_UN
+unlock (Lock fd) = liftIO $ do _ <- flock fd c_LOCK_UN
                                closeFd (Fd fd)
 
