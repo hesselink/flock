@@ -1,7 +1,7 @@
 
 module System.Lock.FLock
       (withLock, lock, unlock,
-       SharedExclusive(Shared, Exclusive), Block(Block, NoBlock)) where
+       SharedExclusive(Shared, Exclusive), Block(Block, NoBlock), Lock) where
 
 import Control.Monad.Trans (MonadIO, liftIO)
 import Data.Bits ((.|.))
