@@ -21,7 +21,9 @@ Source-repository head
   Location:         git://github.com/hesselink/flock.git
 
 Library
-  Build-Depends:      base > 3 && < 5, unix >= 2.3 && < 2.5, mtl == 1.1.*
+  Build-Depends:      base > 3 && < 5
+                    , mtl == 1.1.* || == 2.0.*
+                    , unix >= 2.3 && < 2.5
   Extensions:         ForeignFunctionInterface
   Exposed-modules:    System.Lock.FLock
   GHC-Options:        -Wall
