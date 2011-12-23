@@ -1,3 +1,9 @@
+0.2.5.1
+  * Fix warnings in GHC 7.4.
+
+0.2.5
+  * GHC 7.2 compatibility.
+
 0.2.4:
   * Allow mtl 2.
 
