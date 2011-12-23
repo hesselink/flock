@@ -24,6 +24,5 @@ Library
   Build-Depends:      base > 3 && < 5
                     , mtl == 1.1.* || == 2.0.*
                     , unix >= 2.3 && < 2.6
-  Extensions:         ForeignFunctionInterface
   Exposed-modules:    System.Lock.FLock
   GHC-Options:        -Wall

@@ -1,11 +1,15 @@
-
+{-# LANGUAGE ForeignFunctionInterface, CPP #-}
 module System.Lock.FLock
       (withLock, lock, unlock,
        SharedExclusive(Shared, Exclusive), Block(Block, NoBlock), Lock) where
 
 import Control.Monad.Trans (MonadIO, liftIO)
 import Data.Bits ((.|.))
+#if MIN_VERSION_base(4,5,0)
+import Foreign.C.Types (CInt(..))
+#else
 import Foreign.C.Types (CInt)
+#endif
 import System.Posix.Error (throwErrnoPathIfMinus1_)
 import System.Posix.IO (openFd, defaultFileFlags, closeFd,
                         OpenMode(ReadOnly, WriteOnly))
