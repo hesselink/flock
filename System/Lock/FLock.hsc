@@ -3,9 +3,7 @@ module System.Lock.FLock
       (withLock, lock, unlock,
        SharedExclusive(Shared, Exclusive), Block(Block, NoBlock), Lock) where
 
-import qualified Control.Monad.Trans.Control as MC
-import qualified Control.Exception.Lifted as MC
-import Control.Monad.IO.Class
+import Control.Monad.IO.Class (MonadIO (..))
 import Data.Bits ((.|.))
 #if __GLASGOW_HASKELL__ > 702
 import Foreign.C.Types (CInt(..))
@@ -16,6 +14,8 @@ import System.Posix.Error (throwErrnoPathIfMinus1_)
 import System.Posix.IO (openFd, defaultFileFlags, closeFd,
                         OpenMode(ReadOnly, WriteOnly))
 import System.Posix.Types (Fd(Fd))
+import Control.Monad.Trans.Control (MonadBaseControl)
+import Control.Exception.Lifted (bracket)
 
 #include <sys/file.h>
 
@@ -33,8 +33,12 @@ data Block = Block | NoBlock
 
 newtype Lock = Lock CInt
 
-withLock :: (MonadIO m, MC.MonadBaseControl IO m) => FilePath -> SharedExclusive -> Block -> m a -> m a
-withLock fp se b x = MC.bracket (lock fp se b) unlock $ const x
+withLock :: (MonadIO m, MonadBaseControl IO m) => FilePath -> SharedExclusive -> Block -> m a -> m a
+withLock fp se b x =
+  bracket
+    (lock fp se b)
+    unlock
+    (const x)
 
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO
