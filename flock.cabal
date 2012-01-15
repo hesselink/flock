@@ -22,7 +22,9 @@ Source-repository head
 
 Library
   Build-Depends:      base > 3 && < 5
-                    , mtl == 1.1.* || == 2.0.*
+                    , transformers >= 0.2 && < 0.3
+                    , monad-control >= 0.3 && < 0.4
+                    , lifted-base >= 0.1 && < 0.2
                     , unix >= 2.3 && < 2.6
   Exposed-modules:    System.Lock.FLock
   GHC-Options:        -Wall

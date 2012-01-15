@@ -1,9 +1,11 @@
-{-# LANGUAGE ForeignFunctionInterface, CPP #-}
+{-# LANGUAGE ForeignFunctionInterface, CPP, FlexibleContexts #-}
 module System.Lock.FLock
       (withLock, lock, unlock,
        SharedExclusive(Shared, Exclusive), Block(Block, NoBlock), Lock) where
 
-import Control.Monad.Trans (MonadIO, liftIO)
+import qualified Control.Monad.Trans.Control as MC
+import qualified Control.Exception.Lifted as MC
+import Control.Monad.IO.Class
 import Data.Bits ((.|.))
 #if __GLASGOW_HASKELL__ > 702
 import Foreign.C.Types (CInt(..))
@@ -31,13 +33,8 @@ data Block = Block | NoBlock
 
 newtype Lock = Lock CInt
 
--- We should really use something like bracket, but being in MonadIO makes
--- that tricky
-withLock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m a -> m a
-withLock fp se b x = do l <- lock fp se b
-                        r <- x
-                        unlock l
-                        return r
+withLock :: (MonadIO m, MC.MonadBaseControl IO m) => FilePath -> SharedExclusive -> Block -> m a -> m a
+withLock fp se b x = MC.bracket (lock fp se b) unlock $ const x
 
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO
