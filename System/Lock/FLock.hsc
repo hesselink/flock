@@ -5,7 +5,7 @@ module System.Lock.FLock
 
 import Control.Monad.Trans (MonadIO, liftIO)
 import Data.Bits ((.|.))
-#if MIN_VERSION_base(4,5,0)
+#if __GLASGOW_HASKELL__ > 702
 import Foreign.C.Types (CInt(..))
 #else
 import Foreign.C.Types (CInt)
