@@ -1,3 +1,6 @@
+0.2.5.2
+  * Build with current Cabal. Thanks to Mitsutoshi Aoe for this fix.
+
 0.2.5.1
   * Fix warnings in GHC 7.4.
 
