@@ -13,7 +13,7 @@ import Foreign.C.Types (CInt)
 import System.Posix.Error (throwErrnoPathIfMinus1_)
 import Foreign.C.Error (throwErrnoIfMinus1_)
 import System.Posix.IO (openFd, defaultFileFlags, closeFd,
-                        OpenMode(ReadOnly, WriteOnly))
+                        OpenMode(ReadOnly, WriteOnly), dup)
 import System.Posix.Types (Fd(Fd))
 import Control.Monad.Trans.Control (MonadBaseControl)
 import Control.Exception.Lifted (bracket)
@@ -66,9 +66,10 @@ lock fp se b = liftIO
                    Exclusive -> WriteOnly
 
 lockFd :: MonadIO m => Fd -> SharedExclusive -> Block -> m Lock
-lockFd (Fd fd) se b = liftIO
-                    $ do throwErrnoIfMinus1_ "flock" $ flock fd (operation se b)
-                         return (Lock fd)
+lockFd fd se b = liftIO
+               $ do (Fd fd') <- dup fd
+                    throwErrnoIfMinus1_ "flock" $ flock fd' (operation se b)
+                    return (Lock fd')
 
 unlock :: MonadIO m => Lock -> m ()
 unlock (Lock fd) = liftIO $ do _ <- flock fd c_LOCK_UN
