@@ -1,3 +1,7 @@
+0.3.1
+  * Add lockFd and withFdLock, locking with a user-provided file
+	descriptor. Thanks to Eelis for this feature.
+
 0.3
   * Protect against exception in withLock using monad-control. Thanks
     to Takahiro Himura for this feature.
