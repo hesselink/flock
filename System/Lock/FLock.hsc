@@ -1,22 +1,36 @@
-{-# LANGUAGE ForeignFunctionInterface, CPP, FlexibleContexts #-}
+{-# LANGUAGE ForeignFunctionInterface
+           , CPP
+           , FlexibleContexts
+           #-}
 module System.Lock.FLock
-      (withLock, withFdLock, lock, lockFd, unlock,
-       SharedExclusive(Shared, Exclusive), Block(Block, NoBlock), Lock) where
+  ( withLock
+  , withFdLock
+  , lock
+  , lockFd
+  , unlock
+  , SharedExclusive(Shared, Exclusive)
+  , Block(Block, NoBlock)
+  , Lock
+  ) where
 
-import Control.Monad.IO.Class (MonadIO (..))
-import Data.Bits ((.|.))
+import Control.Exception.Lifted    ( bracket )
+import Control.Monad.IO.Class      ( MonadIO (..) )
+import Control.Monad.Trans.Control ( MonadBaseControl )
+import Data.Bits                   ( (.|.) )
+import Foreign.C.Error             ( throwErrnoIfMinus1_ )
 #if __GLASGOW_HASKELL__ > 702
-import Foreign.C.Types (CInt(..))
+import Foreign.C.Types             ( CInt(..) )
 #else
-import Foreign.C.Types (CInt)
+import Foreign.C.Types             ( CInt )
 #endif
-import System.Posix.Error (throwErrnoPathIfMinus1_)
-import Foreign.C.Error (throwErrnoIfMinus1_)
-import System.Posix.IO (openFd, defaultFileFlags, closeFd,
-                        OpenMode(ReadOnly, WriteOnly), dup)
-import System.Posix.Types (Fd(Fd))
-import Control.Monad.Trans.Control (MonadBaseControl)
-import Control.Exception.Lifted (bracket)
+import System.Posix.Error          ( throwErrnoPathIfMinus1_ )
+import System.Posix.IO             ( openFd
+                                   , defaultFileFlags
+                                   , closeFd
+                                   , OpenMode(ReadOnly, WriteOnly)
+                                   , dup
+                                   )
+import System.Posix.Types          ( Fd(Fd) )
 
 #include <sys/file.h>
 
@@ -49,29 +63,33 @@ withFdLock fd se b x =
     (const x)
 
 operation :: SharedExclusive -> Block -> CInt
-operation se b = case b of
-                     Block -> op
-                     NoBlock -> op .|. c_LOCK_NB
-    where op = case se of
-                   Shared -> c_LOCK_SH
-                   Exclusive -> c_LOCK_EX
+operation se b =
+  case b of
+    Block   -> op
+    NoBlock -> op .|. c_LOCK_NB
+  where
+    op = case se of
+           Shared    -> c_LOCK_SH
+           Exclusive -> c_LOCK_EX
 
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
-lock fp se b = liftIO
-             $ do Fd fd <- openFd fp om Nothing defaultFileFlags
-                  throwErrnoPathIfMinus1_ "flock" fp $ flock fd (operation se b)
-                  return (Lock fd)
-    where om = case se of
-                   Shared -> ReadOnly
-                   Exclusive -> WriteOnly
+lock fp se b = liftIO $
+  do Fd fd <- openFd fp om Nothing defaultFileFlags
+     throwErrnoPathIfMinus1_ "flock" fp $ flock fd (operation se b)
+     return (Lock fd)
+  where
+    om = case se of
+           Shared    -> ReadOnly
+           Exclusive -> WriteOnly
 
 lockFd :: MonadIO m => Fd -> SharedExclusive -> Block -> m Lock
-lockFd fd se b = liftIO
-               $ do (Fd fd') <- dup fd
-                    throwErrnoIfMinus1_ "flock" $ flock fd' (operation se b)
-                    return (Lock fd')
+lockFd fd se b = liftIO $
+  do (Fd fd') <- dup fd
+     throwErrnoIfMinus1_ "flock" $ flock fd' (operation se b)
+     return (Lock fd')
 
 unlock :: MonadIO m => Lock -> m ()
-unlock (Lock fd) = liftIO $ do _ <- flock fd c_LOCK_UN
-                               closeFd (Fd fd)
+unlock (Lock fd) = liftIO $
+  do _ <- flock fd c_LOCK_UN
+     closeFd (Fd fd)
 
