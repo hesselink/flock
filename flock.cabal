@@ -1,5 +1,5 @@
 Name:               flock
-Version:            0.3.1.1
+Version:            0.3.1.2
 License:            OtherLicense
 License-File:       COPYING
 Copyright:          Ian Lynagh, 2007
@@ -12,7 +12,7 @@ Description:
 Category:           System
 Homepage:           http://github.com/hesselink/flock
 Build-Type:         Simple
-Tested-With:        GHC==6.10.3, GHC==6.12.3, GHC==7.0.2, GHC==7.2.1
+Tested-With:        GHC==7.0.4, GHC==7.4.1, GHC==7.6.1
 Cabal-Version:      >= 1.6
 Extra-source-files: "BSD3", "GPL-2", "CHANGELOG"
 
@@ -25,6 +25,6 @@ Library
                     , transformers >= 0.2 && < 0.4
                     , monad-control >= 0.3 && < 0.4
                     , lifted-base >= 0.1 && < 0.2
-                    , unix >= 2.3 && < 2.6
+                    , unix >= 2.3 && < 2.7
   Exposed-modules:    System.Lock.FLock
   GHC-Options:        -Wall
