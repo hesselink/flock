@@ -1,5 +1,5 @@
 Name:               flock
-Version:            0.3.1.2
+Version:            0.3.1.3
 License:            OtherLicense
 License-File:       COPYING
 Copyright:          Ian Lynagh, 2007
@@ -17,7 +17,7 @@ Cabal-Version:      >= 1.6
 Extra-source-files: "BSD3", "GPL-2", "CHANGELOG"
 
 Source-repository head
-  Type:             github
+  Type:             git
   Location:         git://github.com/hesselink/flock.git
 
 Library
