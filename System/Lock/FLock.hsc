@@ -17,13 +17,13 @@ import Control.Exception.Lifted    ( bracket )
 import Control.Monad.IO.Class      ( MonadIO (..) )
 import Control.Monad.Trans.Control ( MonadBaseControl )
 import Data.Bits                   ( (.|.) )
-import Foreign.C.Error             ( throwErrnoIfMinus1_ )
+import Foreign.C.Error             ( throwErrnoIfMinus1Retry_ )
 #if __GLASGOW_HASKELL__ > 702
 import Foreign.C.Types             ( CInt(..) )
 #else
 import Foreign.C.Types             ( CInt )
 #endif
-import System.Posix.Error          ( throwErrnoPathIfMinus1_ )
+import System.Posix.Error          ( throwErrnoPathIfMinus1Retry_ )
 import System.Posix.IO             ( openFd
                                    , defaultFileFlags
                                    , closeFd
@@ -75,7 +75,7 @@ operation se b =
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO $
   do Fd fd <- openFd fp om Nothing defaultFileFlags
-     throwErrnoPathIfMinus1_ "flock" fp $ flock fd (operation se b)
+     throwErrnoPathIfMinus1Retry_ "flock" fp $ flock fd (operation se b)
      return (Lock fd)
   where
     om = case se of
@@ -85,7 +85,7 @@ lock fp se b = liftIO $
 lockFd :: MonadIO m => Fd -> SharedExclusive -> Block -> m Lock
 lockFd fd se b = liftIO $
   do (Fd fd') <- dup fd
-     throwErrnoIfMinus1_ "flock" $ flock fd' (operation se b)
+     throwErrnoIfMinus1Retry_ "flock" $ flock fd' (operation se b)
      return (Lock fd')
 
 unlock :: MonadIO m => Lock -> m ()
