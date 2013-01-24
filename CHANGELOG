@@ -1,3 +1,6 @@
+0.3.1.5
+  * Retry flock call on EINTR. Thanks to Niklas Baumstark.
+
 0.3.1.4
   * Relax dependency on lifted-base. Thanks to John Lato.
 
