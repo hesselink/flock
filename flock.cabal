@@ -1,5 +1,5 @@
 Name:               flock
-Version:            0.3.1.6
+Version:            0.3.1.7
 License:            OtherLicense
 License-File:       COPYING
 Copyright:          Ian Lynagh, 2007
@@ -22,7 +22,7 @@ Source-repository head
 
 Library
   Build-Depends:      base > 3 && < 5
-                    , transformers >= 0.2 && < 0.4
+                    , transformers >= 0.2 && < 0.5
                     , monad-control >= 0.3 && < 0.4
                     , lifted-base >= 0.1 && < 0.3
                     , unix >= 2.3 && < 2.8
