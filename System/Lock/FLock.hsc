@@ -13,9 +13,8 @@ module System.Lock.FLock
   , Lock
   ) where
 
-import Control.Exception.Lifted    ( bracket )
+import Control.Monad.Catch         ( MonadMask, bracket )
 import Control.Monad.IO.Class      ( MonadIO (..) )
-import Control.Monad.Trans.Control ( MonadBaseControl )
 import Data.Bits                   ( (.|.) )
 import Foreign.C.Error             ( throwErrnoIfMinus1Retry_ )
 #if __GLASGOW_HASKELL__ > 702
@@ -48,14 +47,14 @@ data Block = Block | NoBlock
 
 newtype Lock = Lock CInt
 
-withLock :: (MonadIO m, MonadBaseControl IO m) => FilePath -> SharedExclusive -> Block -> m a -> m a
+withLock :: (MonadIO m, MonadMask m) => FilePath -> SharedExclusive -> Block -> m a -> m a
 withLock fp se b x =
   bracket
     (lock fp se b)
     unlock
     (const x)
 
-withFdLock :: (MonadIO m, MonadBaseControl IO m) => Fd -> SharedExclusive -> Block -> m a -> m a
+withFdLock :: (MonadIO m, MonadMask m) => Fd -> SharedExclusive -> Block -> m a -> m a
 withFdLock fd se b x =
   bracket
     (lockFd fd se b)
