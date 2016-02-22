@@ -25,6 +25,6 @@ Library
                     , transformers >= 0.2 && < 0.5
                     , monad-control >= 0.3 && < 1.1
                     , lifted-base >= 0.1 && < 0.3
-                    , unix >= 2.3 && < 2.8
+                    , unix >= 2.5 && < 2.8
   Exposed-modules:    System.Lock.FLock
   GHC-Options:        -Wall
