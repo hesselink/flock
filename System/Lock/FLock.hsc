@@ -30,9 +30,8 @@ import System.Posix.IO             ( openFd
                                    , OpenMode(ReadOnly, WriteOnly)
                                    , dup
                                    )
-import System.Posix.Types          ( Fd(Fd)
-                                   , CMode(CMode)
-                                   )
+import System.Posix.Types          ( Fd(Fd) )
+import System.Posix.Files          ( stdFileMode )
 
 #include <sys/file.h>
 
@@ -76,7 +75,7 @@ operation se b =
 
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO $
-  do Fd fd <- openFd fp om (Just (CMode 0o666)) defaultFileFlags
+  do Fd fd <- openFd fp om (Just stdFileMode) defaultFileFlags
      throwErrnoPathIfMinus1Retry_ "flock" fp $ flock fd (operation se b)
      return (Lock fd)
   where
