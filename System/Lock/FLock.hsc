@@ -31,6 +31,7 @@ import System.Posix.IO             ( openFd
                                    , dup
                                    )
 import System.Posix.Types          ( Fd(Fd) )
+import System.Posix.Files          ( stdFileMode )
 
 #include <sys/file.h>
 
@@ -48,6 +49,7 @@ data Block = Block | NoBlock
 
 newtype Lock = Lock CInt
 
+-- | If no file or directory exists at the given path, a file will be created first.
 withLock :: (MonadIO m, MonadBaseControl IO m) => FilePath -> SharedExclusive -> Block -> m a -> m a
 withLock fp se b x =
   bracket
@@ -72,9 +74,10 @@ operation se b =
            Shared    -> c_LOCK_SH
            Exclusive -> c_LOCK_EX
 
+-- | If no file or directory exists at the given path, a file will be created first.
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO $
-  do Fd fd <- openFd fp om Nothing defaultFileFlags
+  do Fd fd <- openFd fp om (Just stdFileMode) defaultFileFlags
      throwErrnoPathIfMinus1Retry_ "flock" fp $ flock fd (operation se b)
      return (Lock fd)
   where
