@@ -77,13 +77,9 @@ operation se b =
 -- | If no file or directory exists at the given path, a file will be created first.
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO $
-  do Fd fd <- openFd fp om (Just stdFileMode) defaultFileFlags
+  do Fd fd <- openFd fp ReadOnly (Just stdFileMode) defaultFileFlags
      throwErrnoPathIfMinus1Retry_ "flock" fp $ flock fd (operation se b)
      return (Lock fd)
-  where
-    om = case se of
-           Shared    -> ReadOnly
-           Exclusive -> WriteOnly
 
 lockFd :: MonadIO m => Fd -> SharedExclusive -> Block -> m Lock
 lockFd fd se b = liftIO $
