@@ -27,7 +27,7 @@ import System.Posix.Error          ( throwErrnoPathIfMinus1Retry_ )
 import System.Posix.IO             ( openFd
                                    , defaultFileFlags
                                    , closeFd
-                                   , OpenMode(ReadOnly, WriteOnly)
+                                   , OpenMode(ReadOnly)
                                    , dup
                                    )
 import System.Posix.Types          ( Fd(Fd) )
