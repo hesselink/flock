@@ -1,5 +1,5 @@
 Name:               flock
-Version:            0.3.2
+Version:            0.3.2.1
 License:            OtherLicense
 License-File:       COPYING
 Copyright:          Ian Lynagh, 2007
@@ -21,11 +21,11 @@ Source-repository head
   Location:         git://github.com/hesselink/flock.git
 
 Library
-  Build-Depends:      base > 3 && < 4.16
-                    , transformers >= 0.2 && < 0.6
+  Build-Depends:      base > 3 && < 4.19
+                    , transformers >= 0.2 && < 0.7
                     , monad-control >= 0.3 && < 1.1
                     , lifted-base >= 0.1 && < 0.3
-                    , unix >= 2.5 && < 2.8
+                    , unix >= 2.5 && < 2.9
   Exposed-modules:    System.Lock.FLock
   GHC-Options:        -Wall
   Default-Language:   Haskell2010

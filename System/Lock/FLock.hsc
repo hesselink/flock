@@ -25,6 +25,9 @@ import Foreign.C.Types             ( CInt )
 #endif
 import System.Posix.Error          ( throwErrnoPathIfMinus1Retry_ )
 import System.Posix.IO             ( openFd
+#if MIN_VERSION_unix(2,8,0)
+                                   , OpenFileFlags(..)
+#endif
                                    , defaultFileFlags
                                    , closeFd
                                    , OpenMode(ReadOnly)
@@ -77,7 +80,12 @@ operation se b =
 -- | If no file or directory exists at the given path, a file will be created first.
 lock :: MonadIO m => FilePath -> SharedExclusive -> Block -> m Lock
 lock fp se b = liftIO $
-  do Fd fd <- openFd fp ReadOnly (Just stdFileMode) defaultFileFlags
+  do 
+#if MIN_VERSION_unix(2,8,0)
+     Fd fd <- openFd fp ReadOnly defaultFileFlags { creat = Just stdFileMode }
+#else
+     Fd fd <- openFd fp ReadOnly (Just stdFileMode) defaultFileFlags
+#endif
      throwErrnoPathIfMinus1Retry_ "flock" fp $ flock fd (operation se b)
      return (Lock fd)
 
@@ -91,4 +99,3 @@ unlock :: MonadIO m => Lock -> m ()
 unlock (Lock fd) = liftIO $
   do _ <- flock fd c_LOCK_UN
      closeFd (Fd fd)
-
